@@ -1,0 +1,25 @@
+{
+    "name": "cdisesx/fu-truck",
+    "description": "truck business",
+    "authors": [
+        {
+            "name": "githubSource",
+            "homepage": "https://github.com/cdisesx/fu-truck"
+        }
+    ],
+    "repositories" : [
+        {
+            "type": "github",
+            "url": "https://github.com/cdisesx/fu-pdo"
+        }
+    ],
+    "require": {
+        "php":"^7.0",
+        "ext-pdo": "*",
+        "phpoffice/phpexcel": "1.8.*",
+        "cdisesx/fu-pdo":"1.*"
+    },
+    "autoload": {
+        "psr-4": {"fuTruck\\": "src/fuTruck"}
+    }
+}

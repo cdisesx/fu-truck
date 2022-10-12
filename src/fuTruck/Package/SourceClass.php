@@ -50,8 +50,8 @@ class SourceClass
 
     public function GetPage($params)
     {
-        $page = $params['page'];
-        $limit = $params['limit'];
+        $page = $params['page'] ?? 1;
+        $limit = $params['limit'] ?? 20;
         $result = [];
 
         $mre = $this->GetMre();

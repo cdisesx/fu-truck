@@ -2,14 +2,12 @@
 namespace fuTruck\Package;
 
 use fuPdo\mysql\Model as fuPdoModel;
-use fuTruck\One\User;
 use fuTruck\Piece\Error;
 use fuTruck\Piece\Model;
 use fuTruck\Piece\Rows;
 
 class MreClass
 {
-    use User;
 
     /**
      * DM模型

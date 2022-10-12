@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91ff7a7cc99576e0032dcc63645da990",
+    "content-hash": "faa54e553d2d82b33b1d62620a691057",
     "packages": [
         {
             "name": "cdisesx/fu-pdo",
-            "version": "1.4",
+            "version": "1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cdisesx/fu-pdo.git",
-                "reference": "ddfa9e89da94e33dc3ba353b9c5fec3ebe06a04b"
+                "reference": "e2393e6b51369a10e628b8c800283fa392d9414c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cdisesx/fu-pdo/zipball/ddfa9e89da94e33dc3ba353b9c5fec3ebe06a04b",
-                "reference": "ddfa9e89da94e33dc3ba353b9c5fec3ebe06a04b",
+                "url": "https://api.github.com/repos/cdisesx/fu-pdo/zipball/e2393e6b51369a10e628b8c800283fa392d9414c",
+                "reference": "e2393e6b51369a10e628b8c800283fa392d9414c",
                 "shasum": ""
             },
             "require": {
@@ -38,10 +38,10 @@
             ],
             "description": "A Simple PHP-PDO SDK",
             "support": {
-                "source": "https://github.com/cdisesx/fu-pdo/tree/1.4",
+                "source": "https://github.com/cdisesx/fu-pdo/tree/1.6",
                 "issues": "https://github.com/cdisesx/fu-pdo/issues"
             },
-            "time": "2022-10-06T04:44:20+00:00"
+            "time": "2022-10-12T07:29:34+00:00"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -118,7 +118,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.0|^5.5",
+        "php": "^7.0",
         "ext-pdo": "*"
     },
     "platform-dev": [],

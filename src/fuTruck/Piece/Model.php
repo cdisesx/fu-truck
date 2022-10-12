@@ -48,26 +48,31 @@ class Model
 
     /**
      * @param array|bool $updateFields
+     * @throws \Exception
      */
     public function FixFillFields(&$updateFields)
     {
         if(is_bool($updateFields) && $updateFields){
-            $updateFields = $this->dbModel->getFillable();
+            if(!is_array($this->dbModel->SaveFields)){
+                throw new \Exception("Truck Model Need set SaveFields");
+            }else{
+                $updateFields = $this->dbModel->SaveFields;
+            }
         }
     }
 
     public function Begin()
     {
-        $this->dbModel->getConnection()->beginTransaction();
+        $this->dbModel::Builder()->Begin();
     }
 
     public function Rollback()
     {
-        $this->dbModel->getConnection()->rollBack();
+        $this->dbModel::Builder()->RollBack();
     }
 
     public function Commit()
     {
-        $this->dbModel->getConnection()->commit();
+        $this->dbModel::Builder()->Commit();
     }
 }

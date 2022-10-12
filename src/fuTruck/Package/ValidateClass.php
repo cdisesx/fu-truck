@@ -146,7 +146,7 @@ class ValidateClass
 
             $updateFields = $mre->GetRowsObj()->GetUpdateFields($index);
             foreach ($updateFields as $field) {
-                if($field == "created_at" || $field == "updated_at"){
+                if($field == "create_at" || $field == "update_at"){
                     continue;
                 }
                 if(!isset($row[$field])){

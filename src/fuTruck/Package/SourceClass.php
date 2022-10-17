@@ -106,7 +106,22 @@ class SourceClass
         return $query->Select();
     }
 
-    public function GetRow($where)
+    public function GetRow($params)
+    {
+        $row = [];
+        if(!empty($params)){
+            $mre = $this->GetMre();
+            $query = $mre->GetModel()::Builder();
+            $query->WhereFields($params);
+            $row = $query->One();
+            if(!$row){
+                return [];
+            }
+        }
+        return $row;
+    }
+
+    public function GetOneByPk($where)
     {
         $row = [];
         if(!empty($where)){

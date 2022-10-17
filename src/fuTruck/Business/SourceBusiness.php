@@ -79,9 +79,15 @@ class SourceBusiness extends SingleBusiness
         return $sourceClass->GetPageTotalRow($params);
     }
 
-    public static function GetItem($where)
+    public static function GetByKey($where)
     {
         $sourceClass = self::GetSource();
-        return $sourceClass->GetRow($where);
+        return $sourceClass->GetOneByPk($where);
+    }
+
+    public static function GetRow($params)
+    {
+        $sourceClass = self::GetSource();
+        return $sourceClass->GetRow($params);
     }
 }

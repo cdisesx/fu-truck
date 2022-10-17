@@ -61,14 +61,13 @@ class PrepareClass
     public function GetExistRowMap($clearCache = false){
         if(empty($this->ExistRowMap) || $clearCache){
             $mre = $this->GetMre();
-            $model = $mre->GetModel();
-            $query = $model->newQuery();
+            $query = $mre->GetModel()::Builder();
             $err = "";
             $mre->GetModelObj()->SetPkWhere($query, $mre->GetRows(), $err);
             if(!empty($err)){
                 return [];
             }
-            $rows = $query->get()->toArray();
+            $rows = $query->One();
             $map = [];
             foreach ($rows as $row) {
                 $map[$mre->GetModelObj()->GetPkValue($row)] = $row;

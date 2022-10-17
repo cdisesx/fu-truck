@@ -20,23 +20,12 @@ trait Pk
     public function SetPkWhere(Builder &$query, $rows, &$err)
     {
         foreach ($this->pk as $pk) {
-            if(count($rows) == 1){
-                foreach ($rows as $index=>$row) {
-                    if(!isset($rows[$index][$pk])){
-                        $err = "取不到PK字段：{$pk}";
-                        return false;
-                    }
-                    $query->Where($pk, $rows[$index][$pk]);
-                    break;
-                }
-            }else{
-                $_pkValues = array_filter(array_column($rows, $pk), 'trim');
-                if(empty($_pkValues)){
-                    $err = "取不到PK字段：{$pk}";
-                    return false;
-                }
-                $query->WhereIn($pk, $_pkValues);
+            $_pkValues = array_filter(array_column($rows, $pk), 'trim');
+            if(empty($_pkValues)){
+                $err = "取不到PK字段：{$pk}";
+                return false;
             }
+            $query->WhereIn($pk, $_pkValues);
         }
         return true;
     }

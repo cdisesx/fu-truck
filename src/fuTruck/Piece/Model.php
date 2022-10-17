@@ -53,10 +53,10 @@ class Model
     public function FixFillFields(&$updateFields)
     {
         if(is_bool($updateFields) && $updateFields){
-            if(!is_array($this->dbModel->SaveFields)){
+            if(!is_array($this->GetModel()::GetSaveFields())){
                 throw new \Exception("Truck Model Need set SaveFields");
             }else{
-                $updateFields = $this->dbModel->SaveFields;
+                $updateFields = $this->GetModel()::GetSaveFields();
             }
         }
     }

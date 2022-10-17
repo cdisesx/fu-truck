@@ -33,7 +33,7 @@ class SaverClass
     public static function DefaultSaveRowFun(PrepareClass $prepareClass, MreClass &$mre, $index, $row, $isUpdateFun = null)
     {
         $updateFields = $mre->GetRowsObj()->GetUpdateFields($index);
-        $updateFields = array_intersect($updateFields, $mre->GetModel()->getFillable());
+        $updateFields = array_intersect($updateFields, $mre->GetModel()::GetSaveFields());
 
         $saveData = self::GetSaveData($row, $updateFields);
         $dbModel = $mre->GetModel();
@@ -61,20 +61,22 @@ class SaverClass
                 return false;
             }
             $ok = $builder->Update($saveData);
-            $pk = $m->GetPkValue($row);
         }else{
             $ok = $builder->Insert($saveData);
-            if(empty($m->GetPk())){
-                return $ok;
-            }else if (!empty($ok)){
-                return $ok;
-            }else{
-                $pk = $m->GetPkValue($saveData);
-            }
         }
 
-        if(!$ok){
-            return false;
+        $pkFields = $m->GetPk();
+        if(count($pkFields) > 1){
+            $pk = [];
+            foreach ($pkFields as $pkField) {
+                $pk[$pkField] = $saveData[$pkField];
+            }
+        }else{
+            if(!$ok){
+                return false;
+            }else{
+                $pk = $ok;
+            }
         }
 
         return $pk;
@@ -114,7 +116,13 @@ class SaverClass
         foreach ($mre->GetRows() as $index=>&$row) {
             $updateFields =  $mre->GetRowsObj()->GetUpdateFields($index);
             if($updateFields === true){
-                $mre->GetModelObj()->FixFillFields($updateFields);
+                try {
+                    $mre->GetModelObj()->FixFillFields($updateFields);
+                } catch (\Exception $e) {
+                    $mre->GetErrorObj()->AddError($index, "", $row, $e->getMessage());
+                    $DbTransaction && $mre->GetModelObj()->Rollback();
+                    return false;
+                }
                 $mre->GetRowsObj()->SetUpdateFields($index, $updateFields);
             }
 

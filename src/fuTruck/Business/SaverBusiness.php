@@ -25,6 +25,20 @@ class SaverBusiness extends SingleBusiness
     protected $FunSubValid = "valid_";
     protected $ValidClassName = "";
 
+    public static function SaveRowWithValid($saveRow, &$error)
+    {
+        $saver = self::GetSaver();
+        $saver->AppendRow($saveRow);
+        $res = $saver->DoSaveWithValidate(true);
+
+        if(!$res || $saver->GetErrors()){
+            $error = $saver->GetFirstError();
+        }
+
+        return $res[0];
+    }
+
+
     public static function GetSaver()
     {
         /**

@@ -29,6 +29,8 @@ class SaverClass
     protected $saveRowFun = ["fuTruck\Package\SaverClass", "DefaultSaveRowFun"];
     protected $afterSaveFun = [];
     protected $isUpdateFun = [];
+    protected $updateField = "update_at";
+    protected $createField = "create_at";
 
     public static function DefaultSaveRowFun(PrepareClass $prepareClass, MreClass &$mre, $index, $row, $isUpdateFun = null)
     {

@@ -76,7 +76,7 @@ class SaverBusiness extends SingleBusiness
      * @param $updateFields array|bool
      * @return mixed
      */
-    public static function AppendRowsAndValidate(SaverClass &$saver, $rows, $updateFields)
+    public static function AppendRowsAndValidate(SaverClass &$saver,array $rows, $updateFields)
     {
         foreach ($rows as $row) {
             $saver->AppendRow($row, $updateFields);

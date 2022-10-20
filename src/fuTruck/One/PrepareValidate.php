@@ -13,15 +13,15 @@ trait PrepareValidate
      */
     protected $Prepare;
 
-    public function GetPrepare()
+    public function getPrepare()
     {
         if($this->Prepare instanceof PrepareClass){
             return $this->Prepare;
         }
-        $prepare = new PrepareClass($this->GetMreMark());
+        $prepare = new PrepareClass($this->getMreMark());
 
         if(!empty($this->PrepareFun)){
-            $prepare->RegisterFun(PrepareClass::FunPrepare, $this->PrepareFun);
+            $prepare->registerFun(PrepareClass::FunPrepare, $this->PrepareFun);
         }
         $this->Prepare = $prepare;
 
@@ -29,32 +29,32 @@ trait PrepareValidate
     }
 
 
-    public $ValidClassName = "";
-    public $FunSubFore = "fore_valid_";
-    public $FunSubValid = "valid_";
+    public $validClassName = "";
+    public $funSubFore = "fore_valid_";
+    public $funSubValid = "valid_";
 
-    public function GetValidate()
+    public function getValidate()
     {
-        $prepare = $this->GetPrepare();
+        $prepare = $this->getPrepare();
         $validate = new ValidateClass($prepare);
-        $validate->SetFunSubFore($this->FunSubFore);
-        $validate->SetFunSubValid($this->FunSubValid);
+        $validate->setFunSubFore($this->funSubFore);
+        $validate->setFunSubValid($this->funSubValid);
 
-        if($this->ValidClassName){
-            $validate->SetValidateClassName($this->ValidClassName);
-            $methods = get_class_methods($this->ValidClassName);
+        if($this->validClassName){
+            $validate->setValidateClassName($this->validClassName);
+            $methods = get_class_methods($this->validClassName);
             foreach ($methods as $method) {
                 $RegisterFun = false;
 
-                if(substr($method, 0, strlen($this->FunSubFore)) === $this->FunSubFore){
+                if(substr($method, 0, strlen($this->funSubFore)) === $this->funSubFore){
                     $RegisterFun = true;
                 }
-                if(substr($method, 0, strlen($this->FunSubValid)) === $this->FunSubValid){
+                if(substr($method, 0, strlen($this->funSubValid)) === $this->funSubValid){
                     $RegisterFun = true;
                 }
 
                 if($RegisterFun){
-                    $validate->RegisterValidateFun($method);
+                    $validate->registerValidateFun($method);
                 }
             }
         }
@@ -62,15 +62,15 @@ trait PrepareValidate
         return $validate;
     }
 
-    public function DoValidateRows()
+    public function doValidateRows()
     {
-        $validate = $this->GetValidate();
-        return $validate->ValidateRows();
+        $validate = $this->getValidate();
+        return $validate->validateRows();
     }
 
-    public function DoPrepare()
+    public function doPrepare()
     {
-        $validate = $this->GetValidate();
-        return $validate->GetPrepare()->DoPrepare();
+        $validate = $this->getValidate();
+        return $validate->getPrepare()->doPrepare();
     }
 }

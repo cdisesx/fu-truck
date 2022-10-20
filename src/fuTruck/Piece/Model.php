@@ -38,7 +38,7 @@ class Model
     /**
      * @return fuPdoModel
      */
-    public function GetModel()
+    public function getModel()
     {
         if($this->dbModel == null){
             $this->initModel();
@@ -50,29 +50,29 @@ class Model
      * @param array|bool $updateFields
      * @throws \Exception
      */
-    public function FixFillFields(&$updateFields)
+    public function fixFillFields(&$updateFields)
     {
         if(is_bool($updateFields) && $updateFields){
-            if(!is_array($this->GetModel()::GetSaveFields())){
+            if(!is_array($this->getModel()::GetSaveFields())){
                 throw new \Exception("Truck Model Need set SaveFields");
             }else{
-                $updateFields = $this->GetModel()::GetSaveFields();
+                $updateFields = $this->getModel()::GetSaveFields();
             }
         }
     }
 
-    public function Begin()
+    public function begin()
     {
-        $this->dbModel::Builder()->Begin();
+        $this->dbModel::Builder()->begin();
     }
 
-    public function Rollback()
+    public function rollBack()
     {
-        $this->dbModel::Builder()->RollBack();
+        $this->dbModel::Builder()->rollBack();
     }
 
-    public function Commit()
+    public function commit()
     {
-        $this->dbModel::Builder()->Commit();
+        $this->dbModel::Builder()->commit();
     }
 }

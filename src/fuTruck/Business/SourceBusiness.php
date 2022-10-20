@@ -1,6 +1,9 @@
 <?php
 namespace fuTruck\Business;
 
+use fuPdo\mysql\Error;
+use fuPdo\mysql\Searcher;
+use fuPdo\mysql\Where;
 use fuTruck\Package\MreClass;
 use fuTruck\Package\SourceClass;
 use fuPdo\mysql\Builder;
@@ -11,6 +14,7 @@ class SourceBusiness extends SingleBusiness
     protected $dbModelName = "";
     protected $pk = ["id"];
     protected $getCount = true;
+    public static $whereRule = [];
 
     /**
      * @return SourceClass
@@ -24,7 +28,7 @@ class SourceBusiness extends SingleBusiness
 
         $mreMark = MreClass::CreateInstance($s->dbModelName, $s->pk);
         $sourceClass = new SourceClass($mreMark);
-        $sourceClass->IsGetCount($s->getCount);
+        $sourceClass->isGetCount($s->getCount);
         return $sourceClass;
     }
 
@@ -43,10 +47,12 @@ class SourceBusiness extends SingleBusiness
                 if(empty($orderBy)){
                     continue;
                 }
-                if(is_string($orderBy)){
-                    $orderBy = explode(' ', $orderBy);
+                if(is_array($orderBy)){
+                    $orderBy = join(' ', $orderBy);
                 }
-                $query->orderBy($orderBy[0], $orderBy[1]);
+                if(is_string($orderBy)){
+                    $query->orderBy($orderBy);
+                }
             }
         }
     }
@@ -54,19 +60,19 @@ class SourceBusiness extends SingleBusiness
     public static function GetPage($params)
     {
         $sourceClass = self::GetSource();
-        $sourceClass->RegisterFun(SourceClass::FunPageWhere, [get_called_class(), "PageWhere"]);
-        $sourceClass->RegisterFun(SourceClass::FunPageMngRows, [get_called_class(), "PageMngRows"]);
-        $sourceClass->RegisterFun(SourceClass::FunPageOrderBy, [get_called_class(), "PageOrderBy"]);
-        return $sourceClass->GetPage($params);
+        $sourceClass->registerFun(SourceClass::FunPageWhere, [get_called_class(), "PageWhere"]);
+        $sourceClass->registerFun(SourceClass::FunPageMngRows, [get_called_class(), "PageMngRows"]);
+        $sourceClass->registerFun(SourceClass::FunPageOrderBy, [get_called_class(), "PageOrderBy"]);
+        return $sourceClass->getPage($params);
     }
 
     public static function GetList($params)
     {
         $sourceClass = self::GetSource();
-        $sourceClass->RegisterFun(SourceClass::FunPageWhere, [get_called_class(), "PageWhere"]);
-        $sourceClass->RegisterFun(SourceClass::FunPageMngRows, [get_called_class(), "PageMngRows"]);
-        $sourceClass->RegisterFun(SourceClass::FunPageOrderBy, [get_called_class(), "PageOrderBy"]);
-        return $sourceClass->GetList($params);
+        $sourceClass->registerFun(SourceClass::FunPageWhere, [get_called_class(), "PageWhere"]);
+        $sourceClass->registerFun(SourceClass::FunPageMngRows, [get_called_class(), "PageMngRows"]);
+        $sourceClass->registerFun(SourceClass::FunPageOrderBy, [get_called_class(), "PageOrderBy"]);
+        return $sourceClass->getList($params);
     }
 
     public static function PageTotalRowQuery($params, Builder &$query, MreClass $mre){}
@@ -74,20 +80,30 @@ class SourceBusiness extends SingleBusiness
     public static function GetPageTotalRow($params)
     {
         $sourceClass = self::GetSource();
-        $sourceClass->RegisterFun(SourceClass::FunPageWhere, [get_called_class(), "PageWhere"]);
-        $sourceClass->RegisterFun(SourceClass::FunTotalRowQuery, [get_called_class(), "PageTotalRowQuery"]);
-        return $sourceClass->GetPageTotalRow($params);
+        $sourceClass->registerFun(SourceClass::FunPageWhere, [get_called_class(), "PageWhere"]);
+        $sourceClass->registerFun(SourceClass::FunTotalRowQuery, [get_called_class(), "PageTotalRowQuery"]);
+        return $sourceClass->getPageTotalRow($params);
     }
 
-    public static function GetByKey($where)
+    public static function GetByKey($row)
     {
         $sourceClass = self::GetSource();
-        return $sourceClass->GetOneByPk($where);
+        return $sourceClass->getOneByPk($row);
     }
 
     public static function GetRow($params)
     {
         $sourceClass = self::GetSource();
-        return $sourceClass->GetRow($params);
+
+        /**
+         * @var Error $error
+         */
+        $error = null;
+        $where = Searcher::GetWhereByRule($params, self::$whereRule, $error);
+        if($error != null){
+            $sourceClass->getMre()->appendStrError($error->getErrorMessage());
+            return [];
+        }
+        return $sourceClass->getRow($where);
     }
 }

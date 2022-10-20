@@ -36,9 +36,9 @@ class ExcelBusiness extends SingleBusiness
             return [];
         }
 
-        $model = $excelClass->GetMre()->GetModel();
+        $model = $excelClass->getMre()->getModel();
         $query = $model::query();
-        static::OutputWhere($params, $query, $excelClass->GetMre());
+        static::OutputWhere($params, $query, $excelClass->getMre());
         return $query->get()->toArray();
     }
 
@@ -65,13 +65,13 @@ class ExcelBusiness extends SingleBusiness
         $excelClass = new ExcelClass($mreMark);
 
         // 配置Excel导入导出
-        $excelClass->SetExcelSupportHeader($s->excelSupportHeader);
-        $excelClass->SetExcelHeaderRowNum($s->excelHeaderRowNum);
-        $excelClass->SetExcelSheetName($s->excelSheetName);
-        $excelClass->SetExcelDescription($s->excelDescription);
-        $excelClass->SetExcelHeaderStyle($s->excelHeaderStyle);
+        $excelClass->setExcelSupportHeader($s->excelSupportHeader);
+        $excelClass->setExcelHeaderRowNum($s->excelHeaderRowNum);
+        $excelClass->setExcelSheetName($s->excelSheetName);
+        $excelClass->setExcelDescription($s->excelDescription);
+        $excelClass->setExcelHeaderStyle($s->excelHeaderStyle);
 
-        $excelClass->GetMre()->GetErrorObj()->SetFieldsCn($s->excelSupportHeader);
+        $excelClass->getMre()->getErrorObj()->setFieldsCn($s->excelSupportHeader);
         return $excelClass;
     }
 
@@ -86,12 +86,12 @@ class ExcelBusiness extends SingleBusiness
         $s = self::GetInstance();
 
         $excelClass = self::GetCommonExcelClass();
-        $excelClass->FunSubValid = $s->ImportFunSubValid;
-        $excelClass->FunSubFore = $s->ImportFunSubFore;
+        $excelClass->funSubValid = $s->ImportFunSubValid;
+        $excelClass->funSubFore = $s->ImportFunSubFore;
         if($s->ImportValidClassName){
-            $excelClass->ValidClassName = $s->ImportValidClassName;
+            $excelClass->validClassName = $s->ImportValidClassName;
         }else{
-            $excelClass->ValidClassName = get_called_class();
+            $excelClass->validClassName = get_called_class();
         }
         $excelClass->PrepareFun = [get_called_class(), "ImportPrepare"];
 
@@ -115,10 +115,10 @@ class ExcelBusiness extends SingleBusiness
             $fields = array_keys(self::GetExcelSupportHeader());
         }
         foreach ($rows as $row) {
-            $excelClass->GetMre()->GetRowsObj()->AppendRow($row, $fields);
+            $excelClass->getMre()->getRowsObj()->appendRow($row, $fields);
         }
         if(!empty($rows)){
-            $excelClass->DoValidateRows();
+            $excelClass->doValidateRows();
         }
 
         return $excelClass;
@@ -132,14 +132,14 @@ class ExcelBusiness extends SingleBusiness
         $s = self::GetInstance();
 
         $excelClass = self::GetCommonExcelClass();
-        $excelClass->SetExcelHeader(array_keys($s->excelSupportHeader));
+        $excelClass->setExcelHeader(array_keys($s->excelSupportHeader));
 
-        $excelClass->FunSubValid = $s->OutputFunSubValid;
-        $excelClass->FunSubFore = $s->OutputFunSubFore;
+        $excelClass->funSubValid = $s->OutputFunSubValid;
+        $excelClass->funSubFore = $s->OutputFunSubFore;
         if($s->ImportValidClassName){
-            $excelClass->ValidClassName = $s->OutputValidClassName;
+            $excelClass->validClassName = $s->OutputValidClassName;
         }else{
-            $excelClass->ValidClassName = get_called_class();
+            $excelClass->validClassName = get_called_class();
         }
         $excelClass->PrepareFun = [get_called_class(), "OutputPrepare"];
 
@@ -167,29 +167,29 @@ class ExcelBusiness extends SingleBusiness
 
         $excelClassRows = [$importExcelClass];
         $ok = ExcelClass::ImportToExcelClass($file, $excelClassRows, $err);
-        if(empty($importExcelClass->GetFirstError()) && !empty($err)){
-            $importExcelClass->GetMre()->AddError(0, "","", $err);
+        if(empty($importExcelClass->getFirstError()) && !empty($err)){
+            $importExcelClass->getMre()->addError(0, "","", $err);
         }
         if(!$ok){
             return $importExcelClass;
         }
 
-        $ok = $importExcelClass->DoValidateRows();
+        $ok = $importExcelClass->doValidateRows();
         if(!$ok){
             return $importExcelClass;
         }
 
         if($s->CheckPkUnique){
             $pkVMap = [];
-            $m = $importExcelClass->GetMre()->GetModelObj();
-            foreach ($importExcelClass->GetMre()->GetRows() as $index=>$row) {
-                $pk = $m->GetPkStr($row);
-                $pkV = $m->GetPkValue($row);
+            $m = $importExcelClass->getMre()->getModelObj();
+            foreach ($importExcelClass->getMre()->getRows() as $index=>$row) {
+                $pk = $m->getPkStr($row);
+                $pkV = $m->getPkValueStr($row);
                 if(empty($pkV)){
                     continue;
                 }
                 if(isset($pkVMap[$pkV])){
-                    $importExcelClass->GetMre()->AddError($index, $pk, $pkV, "{$pk}：{$pkV}, 唯一值不能重复");
+                    $importExcelClass->getMre()->addError($index, $pk, $pkV, "{$pk}：{$pkV}, 唯一值不能重复");
                     $ok = false;
                     continue;
                 }
@@ -200,12 +200,12 @@ class ExcelBusiness extends SingleBusiness
             }
         }
 
-        $saver->SetMreMark($importExcelClass->GetMreMark());
-        if(!$saver->DoValidateRows()){
+        $saver->setMreMark($importExcelClass->getMreMark());
+        if(!$saver->doValidateRows()){
             return $importExcelClass;
         }
 
-        $saver->DoSave($DbTransaction);
+        $saver->doSave($DbTransaction);
 
         return $importExcelClass;
     }

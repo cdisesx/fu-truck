@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "faa54e553d2d82b33b1d62620a691057",
+    "content-hash": "f6874437f4f45e0a08654c784646a22c",
     "packages": [
         {
             "name": "cdisesx/fu-pdo",
-            "version": "1.6",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cdisesx/fu-pdo.git",
-                "reference": "e2393e6b51369a10e628b8c800283fa392d9414c"
+                "reference": "08920082fb9a78b8d31ab36e36bae6e76c9d1222"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cdisesx/fu-pdo/zipball/e2393e6b51369a10e628b8c800283fa392d9414c",
-                "reference": "e2393e6b51369a10e628b8c800283fa392d9414c",
+                "url": "https://api.github.com/repos/cdisesx/fu-pdo/zipball/08920082fb9a78b8d31ab36e36bae6e76c9d1222",
+                "reference": "08920082fb9a78b8d31ab36e36bae6e76c9d1222",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
-                "php": "^7.0|^5.5"
+                "php": "^7.0"
             },
             "type": "library",
             "autoload": {
@@ -38,10 +38,10 @@
             ],
             "description": "A Simple PHP-PDO SDK",
             "support": {
-                "source": "https://github.com/cdisesx/fu-pdo/tree/1.6",
+                "source": "https://github.com/cdisesx/fu-pdo/tree/2.0",
                 "issues": "https://github.com/cdisesx/fu-pdo/issues"
             },
-            "time": "2022-10-12T07:29:34+00:00"
+            "time": "2022-10-20T08:28:49+00:00"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -55,7 +55,13 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/1441011fb7ecdd8cc689878f54f8b58a6805f870",
                 "reference": "1441011fb7ecdd8cc689878f54f8b58a6805f870",
-                "shasum": ""
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
             },
             "require": {
                 "ext-mbstring": "*",

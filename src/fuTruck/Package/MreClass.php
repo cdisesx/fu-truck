@@ -70,33 +70,38 @@ class MreClass
         }
     }
 
-    public function GetRowsObj()
+    public function getRowsObj()
     {
         return $this->rows;
     }
 
-    public function GetModelObj()
+    public function getModelObj()
     {
         return $this->model;
     }
 
-    public function GetErrorObj()
+    public function getErrorObj()
     {
         return $this->error;
     }
 
-    public function GetRows()
+    public function getRows()
     {
-        return $this->rows->GetRows();
+        return $this->rows->getRows();
     }
 
-    public function GetRowsInFields($fields = true)
+    public function getRowsInFields($fields = true)
     {
         $rowsInFields = [];
-        $rows = $this->GetRows();
-        foreach ($this->GetRowsObj()->GetUpdateFieldsList() as $index=>$updateFields) {
+        $rows = $this->getRows();
+        foreach ($this->getRowsObj()->getUpdateFieldsList() as $index=>$updateFields) {
             if($fields === true){
-                $this->GetModelObj()->FixFillFields($updateFields);
+                try {
+                    $this->getModelObj()->fixFillFields($updateFields);
+                } catch (\Exception $e) {
+                    $this->appendStrError($e->getMessage());
+                    return [];
+                }
             }else{
                 $updateFields = $fields;
             }
@@ -113,19 +118,24 @@ class MreClass
     /**
      * @return fuPdoModel
      */
-    public function GetModel()
+    public function getModel()
     {
-        return $this->model->GetModel();
+        return $this->model->getModel();
     }
 
-    public function GetErrors()
+    public function getErrors()
     {
-        return $this->error->GetErrors();
+        return $this->error->getErrors();
     }
 
-    public function AddError($index, $field, $value, $error)
+    public function addError($index, $field, $value, $error)
     {
-        $this->error->AddError($index, $field, $value, $error);
+        $this->error->addError($index, $field, $value, $error);
+    }
+
+    public function appendStrError($error)
+    {
+        $this->error->addError(0, '', '', $error);
     }
 
 }

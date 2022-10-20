@@ -34,12 +34,12 @@ class SaverClass
 
     public static function DefaultSaveRowFun(PrepareClass $prepareClass, MreClass &$mre, $index, $row, $isUpdateFun = null)
     {
-        $updateFields = $mre->GetRowsObj()->GetUpdateFields($index);
-        $updateFields = array_intersect($updateFields, $mre->GetModel()::GetSaveFields());
+        $updateFields = $mre->getRowsObj()->getUpdateFields($index);
+        $updateFields = array_intersect($updateFields, $mre->getModel()::GetSaveFields());
 
         $saveData = self::GetSaveData($row, $updateFields);
-        $dbModel = $mre->GetModel();
-        $m = $mre->GetModelObj();
+        $dbModel = $mre->getModel();
+        $m = $mre->getModelObj();
 
         if($isUpdateFun){
             $isUpdate = forward_static_call_array($isUpdateFun, [$prepareClass, $row]);
@@ -49,25 +49,25 @@ class SaverClass
 
         foreach ($saveData as $k=>$v) {
             if(is_array($v)){
-                $mre->GetErrorObj()->AddError($index, $k, $v, "数据{$k}为数组，Sql无法保存");
+                $mre->getErrorObj()->addError($index, $k, $v, "数据{$k}为数组，Sql无法保存");
             }
         }
-        if($mre->GetErrors()){
+        if($mre->getErrors()){
             return false;
         }
 
         $builder = $dbModel::Builder();
-        if($isUpdate && count($m->GetPk()) > 0){
+        if($isUpdate && count($m->getPk()) > 0){
             $error = "";
-            if(!$m->SetPkWhere($query, [$row], $error)){
+            if(!$m->setPkWhere($query, [$row], $error)){
                 return false;
             }
-            $ok = $builder->Update($saveData);
+            $ok = $builder->update($saveData);
         }else{
-            $ok = $builder->Insert($saveData);
+            $ok = $builder->insert($saveData);
         }
 
-        $pkFields = $m->GetPk();
+        $pkFields = $m->getPk();
         if(count($pkFields) > 1){
             $pk = [];
             foreach ($pkFields as $pkField) {
@@ -105,42 +105,42 @@ class SaverClass
         return $saveData;
     }
 
-    public function DoSave($DbTransaction = false)
+    public function doSave($DbTransaction = false)
     {
-        $mre = $this->GetMre();
-        if(empty($mre->GetRows())){
+        $mre = $this->getMre();
+        if(empty($mre->getRows())){
             return true;
         }
 
-        $DbTransaction && $mre->GetModelObj()->Begin();
+        $DbTransaction && $mre->getModelObj()->Begin();
 
         $resPkList = [];
-        foreach ($mre->GetRows() as $index=>&$row) {
-            $updateFields =  $mre->GetRowsObj()->GetUpdateFields($index);
+        foreach ($mre->getRows() as $index=>&$row) {
+            $updateFields =  $mre->getRowsObj()->getUpdateFields($index);
             if($updateFields === true){
                 try {
-                    $mre->GetModelObj()->FixFillFields($updateFields);
+                    $mre->getModelObj()->fixFillFields($updateFields);
                 } catch (\Exception $e) {
-                    $mre->GetErrorObj()->AddError($index, "", $row, $e->getMessage());
-                    $DbTransaction && $mre->GetModelObj()->Rollback();
+                    $mre->getErrorObj()->addError($index, "", $row, $e->getMessage());
+                    $DbTransaction && $mre->getModelObj()->rollback();
                     return false;
                 }
-                $mre->GetRowsObj()->SetUpdateFields($index, $updateFields);
+                $mre->getRowsObj()->setUpdateFields($index, $updateFields);
             }
 
-            $pk = call_user_func_array($this->saveRowFun, [$this->GetPrepare(), &$mre, $index, $row, $this->isUpdateFun]);
+            $pk = call_user_func_array($this->saveRowFun, [$this->getPrepare(), &$mre, $index, $row, $this->isUpdateFun]);
             if($pk){
                 $err = "";
                 if($this->afterSaveFun){
-                    $afterSaveRes = call_user_func_array($this->afterSaveFun, [$this->GetPrepare(), $row, $updateFields, $pk, &$err]);
+                    $afterSaveRes = call_user_func_array($this->afterSaveFun, [$this->getPrepare(), $row, $updateFields, $pk, &$err]);
                     if(!empty($err)){
-                        $mre->GetErrorObj()->AddError($index, "", $row, $err);
+                        $mre->getErrorObj()->addError($index, "", $row, $err);
                     }
                     if(!$afterSaveRes){
                         if(empty($err)){
-                            $mre->GetErrorObj()->AddError($index, "", $row, "AfterSave执行失败");
+                            $mre->getErrorObj()->addError($index, "", $row, "AfterSave执行失败");
                         }
-                        $DbTransaction && $mre->GetModelObj()->Rollback();
+                        $DbTransaction && $mre->getModelObj()->rollback();
                         return false;
                     }
                 }
@@ -149,52 +149,52 @@ class SaverClass
             if($pk){
                 $resPkList[$index] = $pk;
             }else{
-                $mre->GetErrorObj()->AddError($index, "", $row, "保存失败");
-                $DbTransaction && $mre->GetModelObj()->Rollback();
+                $mre->getErrorObj()->addError($index, "", $row, "保存失败");
+                $DbTransaction && $mre->getModelObj()->rollback();
                 return false;
             }
         }
 
-        $DbTransaction && $mre->GetModelObj()->Commit();
+        $DbTransaction && $mre->getModelObj()->commit();
         return $resPkList;
     }
 
-    public function DoSaveWithValidate($DbTransaction = false)
+    public function doSaveWithValidate($DbTransaction = false)
     {
-        $validateRes = $this->DoValidateRows();
+        $validateRes = $this->doValidateRows();
 
         if($validateRes){
-            return $this->DoSave($DbTransaction);
+            return $this->doSave($DbTransaction);
         }
 
         return false;
     }
 
-    public function DoSaveWithPrepare($DbTransaction = false)
+    public function doSaveWithPrepare($DbTransaction = false)
     {
-        $prepare = $this->GetPrepare();
-        $prepare->DoPrepare();
-        return $this->DoSave($DbTransaction);
+        $prepare = $this->getPrepare();
+        $prepare->doPrepare();
+        return $this->doSave($DbTransaction);
     }
 
-    public function AppendRow($row, $updateFields = true, $index = false)
+    public function appendRow($row, $updateFields = true, $index = false)
     {
-        $this->GetMre()->GetRowsObj()->AppendRow($row, $updateFields, $index);
+        $this->getMre()->getRowsObj()->appendRow($row, $updateFields, $index);
     }
 
-    public function GetErrors()
+    public function getErrors()
     {
-        return $this->GetMre()->GetErrors();
+        return $this->getMre()->getErrors();
     }
 
-    public function RemoveExistRows()
+    public function removeExistRows()
     {
-        $mre = $this->GetMre();
-        $prepare = $this->GetPrepare();
-        $prepare->GetExistRowMap();
-        foreach ($mre->GetRows() as $index=>$row) {
-            if ($prepare->GetExistRow($row)){
-                $mre->GetRowsObj()->RemoveRow($index);
+        $mre = $this->getMre();
+        $prepare = $this->getPrepare();
+        $prepare->getExistRowMap();
+        foreach ($mre->getRows() as $index=>$row) {
+            if ($prepare->getExistRow($row)){
+                $mre->getRowsObj()->removeRow($index);
             }
         }
     }

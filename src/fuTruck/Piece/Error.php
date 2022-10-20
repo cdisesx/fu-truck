@@ -11,12 +11,12 @@ class Error extends \fuPdo\mysql\Error
     /**
      * @return array
      */
-    public function GetErrors()
+    public function getErrors()
     {
         return $this->errors;
     }
 
-    public function SetErrors($errors)
+    public function setErrors($errors)
     {
         $this->errors = $errors;
     }
@@ -29,7 +29,7 @@ class Error extends \fuPdo\mysql\Error
     /**
      * @param $fieldsCn array ["name"=>"名称"]
      */
-    public function SetFieldsCn(array $fieldsCn)
+    public function setFieldsCn(array $fieldsCn)
     {
         $this->fieldsCn = $fieldsCn;
     }
@@ -37,7 +37,7 @@ class Error extends \fuPdo\mysql\Error
     /**
      * @return array
      */
-    public function GetFieldsCn()
+    public function getFieldsCn()
     {
         return $this->fieldsCn;
     }
@@ -48,7 +48,7 @@ class Error extends \fuPdo\mysql\Error
      * @param $value mixed
      * @param $error string
      */
-    public function AddError(int $index, string $field, $value, string $error)
+    public function addError(int $index, string $field, $value, string $error)
     {
         $this->errors[] = [
             "index"=>$index,
@@ -61,10 +61,10 @@ class Error extends \fuPdo\mysql\Error
     /**
      * @param $errorRows []error
      */
-    public function AddErrors($errorRows)
+    public function addErrors($errorRows)
     {
         foreach ($errorRows as $errorRow) {
-            $this->AddError($errorRow['index'], $errorRow['field'], $errorRow['value'], $errorRow['error']);
+            $this->addError($errorRow['index'], $errorRow['field'], $errorRow['value'], $errorRow['error']);
         }
     }
 }

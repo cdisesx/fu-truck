@@ -5,18 +5,18 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'e7b8104a3715b7872d332728d4f9062aec6d206c',
+        'reference' => '61f6ad77ac3aaa6db57384a8c71d632841a554ac',
         'name' => 'cdisesx/fu-truck',
         'dev' => true,
     ),
     'versions' => array(
         'cdisesx/fu-pdo' => array(
-            'pretty_version' => '1.6',
-            'version' => '1.6.0.0',
+            'pretty_version' => '2.0',
+            'version' => '2.0.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../cdisesx/fu-pdo',
             'aliases' => array(),
-            'reference' => 'e2393e6b51369a10e628b8c800283fa392d9414c',
+            'reference' => '08920082fb9a78b8d31ab36e36bae6e76c9d1222',
             'dev_requirement' => false,
         ),
         'cdisesx/fu-truck' => array(
@@ -25,7 +25,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'e7b8104a3715b7872d332728d4f9062aec6d206c',
+            'reference' => '61f6ad77ac3aaa6db57384a8c71d632841a554ac',
             'dev_requirement' => false,
         ),
         'phpoffice/phpexcel' => array(

@@ -27,12 +27,12 @@ class ExcelClass
      */
     protected $excelSupportHeader = [];
 
-    public function SetExcelSupportHeader($excelSupportHeader)
+    public function setExcelSupportHeader($excelSupportHeader)
     {
         $this->excelSupportHeader = $excelSupportHeader;
     }
 
-    public function GetExcelSupportHeader()
+    public function getExcelSupportHeader()
     {
         return $this->excelSupportHeader;
     }
@@ -43,17 +43,17 @@ class ExcelClass
      */
     protected $excelHeaderStyle = [];
 
-    public function SetExcelHeaderStyle($style)
+    public function setExcelHeaderStyle($style)
     {
         $this->excelHeaderStyle = $style;
     }
 
-    public function GetExcelHeaderStyle()
+    public function getExcelHeaderStyle()
     {
         return $this->excelHeaderStyle;
     }
 
-    public function GetExcelHeaderStyleMap()
+    public function getExcelHeaderStyleMap()
     {
         $mngMap = [];
         foreach ($this->excelHeaderStyle as $row) {
@@ -70,12 +70,12 @@ class ExcelClass
      */
     protected $excelHeaderDataStyle = [];
 
-    public function SetExcelDataStyle($style)
+    public function setExcelDataStyle($style)
     {
         $this->excelHeaderDataStyle = $style;
     }
 
-    public function GetExcelDataStyle()
+    public function getExcelDataStyle()
     {
         return $this->excelHeaderDataStyle;
     }
@@ -87,12 +87,12 @@ class ExcelClass
      */
     protected $excelHeader = [];
 
-    public function SetExcelHeader($excelHeader)
+    public function setExcelHeader($excelHeader)
     {
         $this->excelHeader = $excelHeader;
     }
 
-    public function GetExcelHeader()
+    public function getExcelHeader()
     {
         return $this->excelHeader;
     }
@@ -103,7 +103,7 @@ class ExcelClass
      */
     protected $excelHeaderRowNum = 2;
 
-    public function SetExcelHeaderRowNum($excelHeaderRowNum)
+    public function setExcelHeaderRowNum($excelHeaderRowNum)
     {
         $this->excelHeaderRowNum = $excelHeaderRowNum;
     }
@@ -114,7 +114,7 @@ class ExcelClass
      */
     protected $excelSheetName = "";
 
-    public function SetExcelSheetName($excelSheetName)
+    public function setExcelSheetName($excelSheetName)
     {
         $this->excelSheetName = $excelSheetName;
     }
@@ -125,7 +125,7 @@ class ExcelClass
      */
     protected $excelDescription = "";
 
-    public function SetExcelDescription($excelDescription)
+    public function setExcelDescription($excelDescription)
     {
         $this->excelDescription = $excelDescription;
     }
@@ -140,7 +140,7 @@ class ExcelClass
     {
         ini_set('memory_limit','2048M');
         set_time_limit(300);
-        self::outPutMultipleSheetFile($fileName, $user, [$this->GetOutputOption()]);
+        self::outPutMultipleSheetFile($fileName, $user, [$this->getOutputOption()]);
     }
 
     /**
@@ -269,9 +269,9 @@ class ExcelClass
      * 生成要导出的配置和数据
      * @return array
      */
-    public function GetOutputOption()
+    public function getOutputOption()
     {
-        $allHeaderStyleMap = $this->GetExcelHeaderStyleMap();
+        $allHeaderStyleMap = $this->getExcelHeaderStyleMap();
 
         $headerMap = $headerStyle = [];
         foreach ($this->excelHeader as $k=>$headerEn) {
@@ -285,7 +285,7 @@ class ExcelClass
             }
         }
 
-        $mre = $this->GetMre();
+        $mre = $this->getMre();
         $beforeHeader = [];
         if(!empty($this->excelDescription)){
             if(is_array($this->excelDescription)){
@@ -300,7 +300,7 @@ class ExcelClass
         return [
             "sheet_name"=>$this->excelSheetName,
             "header"=>$headerMap,
-            "data"=>$mre->GetRowsInFields($this->excelHeader),
+            "data"=>$mre->getRowsInFields($this->excelHeader),
             "before_header"=>$beforeHeader,
             "header_style"=>$headerStyle,
             "style"=>$this->excelHeaderDataStyle,
@@ -333,11 +333,11 @@ class ExcelClass
         return $this->ExcelRows;
     }
 
-    public function GetExcelErrors()
+    public function getExcelErrors()
     {
-        $errObj = $this->GetMre()->GetErrorObj();
+        $errObj = $this->getMre()->getErrorObj();
         $errors = [];
-        foreach ($errObj->GetErrors() as $error) {
+        foreach ($errObj->getErrors() as $error) {
             if(@$error['index'] > 0){
                 $errors[] = "第{$error['index']}行错误：{$error['error']}";
             }else{
@@ -399,12 +399,12 @@ class ExcelClass
          * @var $excelClass ExcelClass
          */
         foreach ($excelClassList as &$excelClass) {
-            $mre = $excelClass->GetMre();
+            $mre = $excelClass->getMre();
 
             $sheetName = @$excelClass->excelSheetName;
             if(empty($sheetName)){
                 $error = "请配置SheetName";
-                $mre->AddError(0, "", "", $error);
+                $mre->addError(0, "", "", $error);
                 return false;
             }
 
@@ -412,7 +412,7 @@ class ExcelClass
             $sheet = $objPHPExcel->getSheetByName($sheetName);
             if(empty($sheet)){
                 $error = "获取不到表格SheetName:{$sheetName}";
-                $mre->AddError(0, "", "", $error);
+                $mre->addError(0, "", "", $error);
                 return false;
             }
 
@@ -437,7 +437,7 @@ class ExcelClass
                 if($empty_row){
                     if($h == $excelClass->excelHeaderRowNum){
                         $error = "取不到你的头部信息";
-                        $mre->AddError(0, "", "", $error);
+                        $mre->addError(0, "", "", $error);
                         return false;
                     }
                     continue;
@@ -458,7 +458,7 @@ class ExcelClass
                             $excelClass->excelHeader[$k] = $supportHeaderFlip[$v];
                         }else{
                             $error = "{$excelClass->excelSheetName}表格不支持导入Header：{$v}";
-                            $mre->AddError(0, "", "", $error);
+                            $mre->addError(0, "", "", $error);
                             return false;
                         }
                     }else{
@@ -468,7 +468,7 @@ class ExcelClass
                     }
                 }
                 if($h > $excelClass->excelHeaderRowNum){
-                    $mre->GetRowsObj()->AppendRow($appendRow, $excelClass->excelHeader, $h);
+                    $mre->getRowsObj()->appendRow($appendRow, $excelClass->excelHeader, $h);
                 }
             }
         }
@@ -476,19 +476,19 @@ class ExcelClass
         return true;
     }
 
-    public function DoValidateRows($isOutput=false)
+    public function doValidateRows($isOutput=false)
     {
-        $validate = $this->GetValidate();
-        $ok = $validate->ValidateRows();
+        $validate = $this->getValidate();
+        $ok = $validate->validateRows();
         if(!$ok){
             return false;
         }
 
-        $rows = $this->GetMre()->GetRows();
+        $rows = $this->getMre()->getRows();
         foreach ($rows as $i=>$row) {
-            foreach ($this->GetExcelHeader() as $h) {
+            foreach ($this->getExcelHeader() as $h) {
                 if(isset($row[$h]) && is_array($row[$h]) && $isOutput){
-                    $this->GetMre()->GetErrorObj()->AddError($i, $h, $row[$h], "{$h}字段导出时为数组，请处理成字符串");
+                    $this->getMre()->getErrorObj()->addError($i, $h, $row[$h], "{$h}字段导出时为数组，请处理成字符串");
                     return false;
                 }
             }

@@ -21,18 +21,18 @@ class SaverBusiness extends SingleBusiness
 
     public static function Prepare(PrepareClass &$prepareClass, $updateFields, &$error){}
 
-    protected $FunSubFore = "fore_valid_";
-    protected $FunSubValid = "valid_";
-    protected $ValidClassName = "";
+    protected $funSubFore = "fore_valid_";
+    protected $funSubValid = "valid_";
+    protected $validClassName = "";
 
     public static function SaveRowWithValid($saveRow, &$error)
     {
         $saver = self::GetSaver();
-        $saver->AppendRow($saveRow);
-        $res = $saver->DoSaveWithValidate(true);
+        $saver->appendRow($saveRow);
+        $res = $saver->doSaveWithValidate(true);
 
-        if(!$res || $saver->GetErrors()){
-            $error = $saver->GetFirstError();
+        if(!$res || $saver->getErrors()){
+            $error = $saver->getFirstError();
         }
 
         return $res[0];
@@ -48,23 +48,23 @@ class SaverBusiness extends SingleBusiness
 
         $mreMark = MreClass::CreateInstance($s->dbModelName, $s->pk);
         $saverClass = new SaverClass($mreMark);
-        $saverClass->FunSubValid = $s->FunSubValid;
-        $saverClass->FunSubFore = $s->FunSubFore;
-        $saverClass->GetMre()->GetErrorObj()->SetFieldsCn($s->fieldsCn);
+        $saverClass->funSubValid = $s->funSubValid;
+        $saverClass->funSubFore = $s->funSubFore;
+        $saverClass->getMre()->getErrorObj()->setFieldsCn($s->fieldsCn);
 
-        if($s->ValidClassName){
-            $saverClass->ValidClassName = $s->ValidClassName;
+        if($s->validClassName){
+            $saverClass->validClassName = $s->validClassName;
         }else{
-            $saverClass->ValidClassName = get_called_class();
+            $saverClass->validClassName = get_called_class();
         }
 
         if(!$s->useDefaultSaveRowFun){
-            $saverClass->RegisterFun(SaverClass::FunSaveRow, [get_called_class(), "SaverRow"]);
+            $saverClass->registerFun(SaverClass::FunSaveRow, [get_called_class(), "SaverRow"]);
         }
         if(!$s->useDefaultIsUpdateFun){
-            $saverClass->RegisterFun(SaverClass::FunIsUpdate, [get_called_class(), "IsUpdate"]);
+            $saverClass->registerFun(SaverClass::FunIsUpdate, [get_called_class(), "IsUpdate"]);
         }
-        $saverClass->RegisterFun(SaverClass::FunAfterSave, [get_called_class(), "AfterSaverRow"]);
+        $saverClass->registerFun(SaverClass::FunAfterSave, [get_called_class(), "AfterSaverRow"]);
         $saverClass->PrepareFun = [get_called_class(), "Prepare"];
 
         return $saverClass;
@@ -79,9 +79,9 @@ class SaverBusiness extends SingleBusiness
     public static function AppendRowsAndValidate(SaverClass &$saver,array $rows, $updateFields)
     {
         foreach ($rows as $row) {
-            $saver->AppendRow($row, $updateFields);
+            $saver->appendRow($row, $updateFields);
         }
-        return $saver->DoValidateRows();
+        return $saver->doValidateRows();
     }
 
 

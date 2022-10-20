@@ -9,7 +9,6 @@ class PrepareClass
     use FunRegister;
     use MreMark;
 
-
     public function __construct($mreMark)
     {
         $this->mreMark = $mreMark;
@@ -58,19 +57,19 @@ class PrepareClass
      * @param bool $clearCache
      * @return array
      */
-    public function GetExistRowMap($clearCache = false){
+    public function getExistRowMap($clearCache = false){
         if(empty($this->ExistRowMap) || $clearCache){
-            $mre = $this->GetMre();
-            $query = $mre->GetModel()::Builder();
+            $mre = $this->getMre();
+            $query = $mre->getModel()::Builder();
             $err = "";
-            $mre->GetModelObj()->SetPkWhere($query, $mre->GetRows(), $err);
+            $mre->getModelObj()->setPkWhere($query, $mre->getRows(), $err);
             if(!empty($err)){
                 return [];
             }
-            $rows = $query->One();
+            $rows = $query->select();
             $map = [];
             foreach ($rows as $row) {
-                $map[$mre->GetModelObj()->GetPkValue($row)] = $row;
+                $map[$mre->getModelObj()->getPkValueStr($row)] = $row;
             }
             $this->ExistRowMap = $map;
         }
@@ -82,10 +81,10 @@ class PrepareClass
      * @param bool $clearCache
      * @return array
      */
-    public function GetExistRow(array $row, $clearCache = false){
-        $existMsp = $this->GetExistRowMap($clearCache);
-        $mre = $this->GetMre();
-        $pk = $mre->GetModelObj()->GetPkValue($row);
+    public function getExistRow(array $row, $clearCache = false){
+        $existMsp = $this->getExistRowMap($clearCache);
+        $mre = $this->getMre();
+        $pk = $mre->getModelObj()->getPkValueStr($row);
         if(isset($existMsp[$pk])){
             return $existMsp[$pk];
         }
@@ -95,7 +94,7 @@ class PrepareClass
     /**
      * @return array
      */
-    public function GetEnums(){
+    public function getEnums(){
         return $this->Enums;
     }
 
@@ -103,34 +102,39 @@ class PrepareClass
      * @param $name
      * @return array
      */
-    public function GetEnum($name){
+    public function getEnum($name){
         return $this->Enums[$name] ?? [];
     }
 
-    public function SetEnum($name, $map){
+    public function setEnum($name, $map){
         $this->Enums[$name] = $map;
     }
 
-    public function DoPrepare()
+    public function doPrepare()
     {
-        $mre = $this->GetMre();
+        $mre = $this->getMre();
         $updateFields = [];
         $error = "";
-        foreach ($mre->GetRowsObj()->GetUpdateFieldsList() as $index=>$fields) {
+        foreach ($mre->getRowsObj()->getUpdateFieldsList() as $index=>$fields) {
             if($fields === true){
                 $updateFields = true;
-                $mre->GetModelObj()->FixFillFields($updateFields);
-                $mre->GetRowsObj()->SetUpdateFields($index, $updateFields);
+                try {
+                    $mre->getModelObj()->fixFillFields($updateFields);
+                } catch (\Exception $e) {
+                    $mre->appendStrError($e->getMessage());
+                    return false;
+                }
+                $mre->getRowsObj()->setUpdateFields($index, $updateFields);
                 continue;
             }
             if(is_array($fields)){
                 $updateFields = array_unique(array_merge($updateFields, $fields));
-                $mre->GetRowsObj()->SetUpdateFields($index, $updateFields);
+                $mre->getRowsObj()->setUpdateFields($index, $updateFields);
             }
         }
         $ok = forward_static_call_array($this->prepareFun, [&$this, $updateFields, &$error]);
         if(!$ok){
-            $mre->AddError(0, "", "", $error);
+            $mre->appendStrError($error);
         }
         return $ok;
     }

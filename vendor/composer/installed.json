@@ -2,24 +2,24 @@
     "packages": [
         {
             "name": "cdisesx/fu-pdo",
-            "version": "1.6",
-            "version_normalized": "1.6.0.0",
+            "version": "2.0",
+            "version_normalized": "2.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cdisesx/fu-pdo.git",
-                "reference": "e2393e6b51369a10e628b8c800283fa392d9414c"
+                "reference": "08920082fb9a78b8d31ab36e36bae6e76c9d1222"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cdisesx/fu-pdo/zipball/e2393e6b51369a10e628b8c800283fa392d9414c",
-                "reference": "e2393e6b51369a10e628b8c800283fa392d9414c",
+                "url": "https://api.github.com/repos/cdisesx/fu-pdo/zipball/08920082fb9a78b8d31ab36e36bae6e76c9d1222",
+                "reference": "08920082fb9a78b8d31ab36e36bae6e76c9d1222",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
-                "php": "^7.0|^5.5"
+                "php": "^7.0"
             },
-            "time": "2022-10-12T07:29:34+00:00",
+            "time": "2022-10-20T08:28:49+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -35,7 +35,7 @@
             ],
             "description": "A Simple PHP-PDO SDK",
             "support": {
-                "source": "https://github.com/cdisesx/fu-pdo/tree/1.6",
+                "source": "https://github.com/cdisesx/fu-pdo/tree/2.0",
                 "issues": "https://github.com/cdisesx/fu-pdo/issues"
             },
             "install-path": "../cdisesx/fu-pdo"

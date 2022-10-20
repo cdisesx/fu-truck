@@ -7,17 +7,17 @@ trait Pk
 {
     protected $pk = ["id"];
 
-    public function GetPk()
+    public function getPk()
     {
         return $this->pk;
     }
 
-    public function GetPkStr()
+    public function getPkStr()
     {
         return join('-', $this->pk);
     }
 
-    public function SetPkWhere(Builder &$query, $rows, &$err)
+    public function setPkWhere(Builder &$query, $rows, &$err)
     {
         foreach ($this->pk as $pk) {
             $_pkValues = array_filter(array_column($rows, $pk), 'trim');
@@ -25,21 +25,27 @@ trait Pk
                 $err = "取不到PK字段：{$pk}";
                 return false;
             }
-            $query->WhereIn($pk, $_pkValues);
+            $query->whereIn($pk, $_pkValues);
         }
         return true;
     }
 
-    public function GetPkValue($row)
+    public function getPkValueStr($row)
+    {
+        $pkValues = $this->getPkValue($row);
+        return join('-', $pkValues);
+    }
+
+    public function getPkValue($row)
     {
         $pkValues = [];
         foreach ($this->pk as $pk) {
             $pkValues[] = @$row[$pk];
         }
-        return join('-', $pkValues);
+        return $pkValues;
     }
 
-    public function IsUpdate($row)
+    public function isUpdate($row)
     {
         if(!empty($row[$this->pk[0]])){
             return true;

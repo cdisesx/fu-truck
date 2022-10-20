@@ -20,7 +20,7 @@ class Rows
      * @param array|bool $updateFields
      * @param int|bool $index
      */
-    public function AppendRow($row, $updateFields, $index = false)
+    public function appendRow($row, $updateFields, $index = false)
     {
         if($index === false){
             $index = count($this->rows);
@@ -38,18 +38,18 @@ class Rows
      * @param int|bool $index
      * @param $row
      */
-    public function SetRow($index, $row)
+    public function setRow($index, $row)
     {
         $this->rows[$index] = $row;
     }
 
-    public function RemoveRow($index)
+    public function removeRow($index)
     {
         unset($this->rows[$index]);
         unset($this->updateFieldsList[$index]);
     }
 
-    public function SetRows($rows, $updateFields)
+    public function setRows($rows, $updateFields)
     {
         $this->rows = $rows;
         $c = count($this->rows);
@@ -63,7 +63,7 @@ class Rows
     /**
      * @return array
      */
-    public function GetRows()
+    public function getRows()
     {
         return $this->rows;
     }
@@ -71,7 +71,7 @@ class Rows
     /**
      * @return array
      */
-    public function GetUpdateFieldsList()
+    public function getUpdateFieldsList()
     {
         return $this->updateFieldsList;
     }
@@ -80,12 +80,12 @@ class Rows
      * @param $index int
      * @return array
      */
-    public function GetUpdateFields(int $index)
+    public function getUpdateFields(int $index)
     {
         return $this->updateFieldsList[$index] ?? [];
     }
 
-    public function SetUpdateFields($index, $updateFields)
+    public function setUpdateFields($index, $updateFields)
     {
         $this->updateFieldsList[$index] = $updateFields;
     }
@@ -95,7 +95,7 @@ class Rows
      * @param $index
      * @param array $fieldNames
      */
-    public function AppendUpdateField($index, Array $fieldNames)
+    public function appendUpdateField($index, Array $fieldNames)
     {
         $this->updateFieldsList[$index] = array_merge($this->updateFieldsList[$index], $fieldNames);
         $this->updateFieldsList[$index] = array_unique($this->updateFieldsList[$index]);
@@ -107,7 +107,7 @@ class Rows
      * @param $updateFields
      * @return array
      */
-    public function GetSaveData($row, $updateFields)
+    public function getSaveData($row, $updateFields)
     {
         if($updateFields === true){
             return $row;

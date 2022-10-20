@@ -7,25 +7,25 @@ trait MreMark
 {
     protected $mreMark = "";
 
-    public function GetMre()
+    public function getMre()
     {
         return MreClass::GetInstance($this->mreMark);
     }
 
-    public function GetMreMark()
+    public function getMreMark()
     {
         return $this->mreMark;
     }
 
-    public function SetMreMark($mreMark)
+    public function setMreMark($mreMark)
     {
         $this->mreMark = $mreMark;
     }
 
-    public function GetFirstError()
+    public function getFirstError()
     {
-        $fieldsCn = $this->GetMre()->GetErrorObj()->GetFieldsCn();
-        foreach ($this->GetMre()->GetErrors() as $e) {
+        $fieldsCn = $this->getMre()->getErrorObj()->getFieldsCn();
+        foreach ($this->getMre()->getErrors() as $e) {
             if (!empty($e['field']) || !empty($e['error'])) {
                 $err = [];
                 if(!empty($e['field'])){
@@ -40,11 +40,11 @@ trait MreMark
         return "";
     }
 
-    public function GetErrorsString($glue = ',')
+    public function getErrorsString($glue = ',')
     {
-        $fieldsCn = $this->GetMre()->GetErrorObj()->GetFieldsCn();
+        $fieldsCn = $this->getMre()->getErrorObj()->getFieldsCn();
         $res = [];
-        foreach ($this->GetMre()->GetErrors() as $e) {
+        foreach ($this->getMre()->getErrors() as $e) {
             if (!empty($e['field']) || !empty($e['error'])) {
                 $err = [];
                 if(!empty($e['field'])){
@@ -59,9 +59,9 @@ trait MreMark
         return join($glue, $res);
     }
 
-    public function GetFirstRow()
+    public function getFirstRow()
     {
-        foreach ($this->GetMre()->GetRows() as $row) {
+        foreach ($this->getMre()->getRows() as $row) {
             if (!empty($row)) {
                 return $row;
             }

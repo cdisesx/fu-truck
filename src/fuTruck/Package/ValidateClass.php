@@ -12,7 +12,7 @@ class ValidateClass
      */
     protected  $prepare;
 
-    public function GetPrepare()
+    public function getPrepare()
     {
         return $this->prepare;
     }
@@ -27,21 +27,21 @@ class ValidateClass
     protected $validateClassName = "";
     protected $validateFunList = [];
 
-    public function GetValidateClassName()
+    public function getValidateClassName()
     {
         return $this->validateClassName;
     }
-    public function SetValidateClassName($className)
+    public function setValidateClassName($className)
     {
         $this->validateClassName = $className;
     }
-    public function RegisterValidateFun($funName)
+    public function registerValidateFun($funName)
     {
         if(!in_array($funName, $this->validateFunList)){
             $this->validateFunList[] = $funName;
         }
     }
-    public function GetValidateFunList()
+    public function getValidateFunList()
     {
         return $this->validateFunList;
     }
@@ -50,18 +50,18 @@ class ValidateClass
      * 对整体要保存的Rows进行校验
      * @return bool
      */
-    public function ValidateRows()
+    public function validateRows()
     {
-        $ok = $this->prepare->DoPrepare();
+        $ok = $this->prepare->doPrepare();
         if(!$ok){
             return false;
         }
 
-        $mre = $this->prepare->GetMre();
+        $mre = $this->prepare->getMre();
 
         $validHasFalse = false;
-        foreach ($mre->GetRows() as $index => &$row) {
-            $ok = $this->ValidateAfterPrepare($index, $row);
+        foreach ($mre->getRows() as $index => &$row) {
+            $ok = $this->validateAfterPrepare($index, $row);
             if(!$ok){
                 $validHasFalse = true;
             }
@@ -69,13 +69,13 @@ class ValidateClass
         return !$validHasFalse;
     }
 
-    public function ValidateRowsIgnorePrepare()
+    public function validateRowsIgnorePrepare()
     {
-        $mre = $this->prepare->GetMre();
+        $mre = $this->prepare->getMre();
 
         $validHasFalse = false;
-        foreach ($mre->GetRows() as $index => &$row) {
-            $ok = $this->ValidateAfterPrepare($index, $row);
+        foreach ($mre->getRows() as $index => &$row) {
+            $ok = $this->validateAfterPrepare($index, $row);
             if(!$ok){
                 $validHasFalse = true;
             }
@@ -89,22 +89,22 @@ class ValidateClass
      * @param $updateFields
      * @return bool
      */
-    public function ValidateRow(&$row, $updateFields)
+    public function validateRow(&$row, $updateFields)
     {
-        forward_static_call_array($this->prepare->PrepareFun, [$this->prepare, $updateFields]);
-        return $this->ValidateAfterPrepare(0, $row, $updateFields);
+        forward_static_call_array($this->prepare->prepareFun, [$this->prepare, $updateFields]);
+        return $this->validateAfterPrepare(0, $row, $updateFields);
     }
 
-    protected $FunSubFore = "fore_valid_";
-    protected $FunSubValid = "valid_";
+    protected $funSubFore = "fore_valid_";
+    protected $funSubValid = "valid_";
 
-    public function SetFunSubFore($sub)
+    public function setFunSubFore($sub)
     {
-        $this->FunSubFore = $sub;
+        $this->funSubFore = $sub;
     }
-    public function SetFunSubValid($sub)
+    public function setFunSubValid($sub)
     {
-        $this->FunSubValid = $sub;
+        $this->funSubValid = $sub;
     }
 
     public static $ValidateTypeFore = 1;
@@ -118,10 +118,10 @@ class ValidateClass
      * @param bool|int $type
      * @return bool
      */
-    public function ValidateAfterPrepare($index, &$row, $type = true)
+    public function validateAfterPrepare($index, &$row, $type = true)
     {
         $validRes = true;
-        $mre = $this->prepare->GetMre();
+        $mre = $this->prepare->getMre();
         try{
             if($type === true){
                 $type = self::$ValidateTypeFore + self::$ValidateTypeEnum + self::$ValidateTypeValidFun;
@@ -129,14 +129,14 @@ class ValidateClass
 
             // 优先校验：优先遍历方法中的fore_valid_xxx方法
             if($type&self::$ValidateTypeFore){
-                $className = $this->GetValidateClassName();
-                $methods = $this->GetValidateFunList();
+                $className = $this->getValidateClassName();
+                $methods = $this->getValidateFunList();
                 foreach ($methods as $method) {
-                    if(substr($method, 0, strlen($this->FunSubFore)) === $this->FunSubFore){
+                    if(substr($method, 0, strlen($this->funSubFore)) === $this->funSubFore){
                         $validError = "";
                         $ok = forward_static_call_array([$className, $method], [&$this->prepare, $index, &$row, &$validError]);
                         if (!$ok) {
-                            $mre->AddError($index, $method, "", $validError);
+                            $mre->addError($index, $method, "", $validError);
                             $validRes = false;
                             continue;
                         }
@@ -144,7 +144,7 @@ class ValidateClass
                 }
             }
 
-            $updateFields = $mre->GetRowsObj()->GetUpdateFields($index);
+            $updateFields = $mre->getRowsObj()->getUpdateFields($index);
             foreach ($updateFields as $field) {
                 if($field == "create_at" || $field == "update_at"){
                     continue;
@@ -162,7 +162,7 @@ class ValidateClass
                         goto ValidateFunc;
                     }
                     if(!array_key_exists($val, $menu)){
-                        $mre->AddError($index, $field, $val, "值不在范围内");
+                        $mre->addError($index, $field, $val, "值不在范围内");
                         $validRes = false;
                         goto ValidateFunc;
                     }
@@ -172,13 +172,13 @@ class ValidateClass
 
                 // 方法校验
                 if($type&self::$ValidateTypeValidFun){
-                    $funName = $this->FunSubValid.$field;
-                    $className = $this->GetValidateClassName();
-                    if (in_array($funName, $this->GetValidateFunList())) {
+                    $funName = $this->funSubValid.$field;
+                    $className = $this->getValidateClassName();
+                    if (in_array($funName, $this->getValidateFunList())) {
                         $validError = "";
                         $ok = forward_static_call_array([$className, $funName], [&$this->prepare, $index, &$row, &$validError]);
                         if (!$ok) {
-                            $mre->AddError($index, $field, $val, $validError);
+                            $mre->addError($index, $field, $val, $validError);
                             $validRes = false;
                             continue;
                         }
@@ -187,7 +187,7 @@ class ValidateClass
 
             }
 
-            $mre->GetRowsObj()->SetRow($index, $row);
+            $mre->getRowsObj()->setRow($index, $row);
 
         }catch (\Exception $exception){
             echo $exception->getMessage();exit;

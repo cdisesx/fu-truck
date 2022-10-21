@@ -14,7 +14,7 @@ class SourceBusiness extends SingleBusiness
     protected $dbModelName = "";
     protected $pk = ["id"];
     protected $getCount = true;
-    public static $whereRule = [];
+    public static $whereRules = [];
 
     /**
      * @return SourceClass
@@ -99,7 +99,8 @@ class SourceBusiness extends SingleBusiness
          * @var Error $error
          */
         $error = null;
-        $where = Searcher::GetWhereByRule($params, self::$whereRule, $error);
+        $calledClass = get_called_class();
+        $where = Searcher::GetWhereByRule($params, $calledClass::$whereRules, $error);
         if($error != null){
             $sourceClass->getMre()->appendStrError($error->getErrorMessage());
             return [];

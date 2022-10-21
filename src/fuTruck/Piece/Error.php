@@ -1,7 +1,7 @@
 <?php
 namespace fuTruck\Piece;
 
-class Error extends \fuPdo\mysql\Error
+class Error
 {
     /**
      * @var array []{"index":"", "field":"", "value":"", "error":""}

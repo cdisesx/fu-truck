@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6874437f4f45e0a08654c784646a22c",
+    "content-hash": "75048b598a7cac4b22c991819a05c76d",
     "packages": [
         {
             "name": "cdisesx/fu-pdo",
-            "version": "2.0",
+            "version": "2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cdisesx/fu-pdo.git",
-                "reference": "08920082fb9a78b8d31ab36e36bae6e76c9d1222"
+                "reference": "490eddafed9667f825b701fbcb64e7b125b99a64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cdisesx/fu-pdo/zipball/08920082fb9a78b8d31ab36e36bae6e76c9d1222",
-                "reference": "08920082fb9a78b8d31ab36e36bae6e76c9d1222",
+                "url": "https://api.github.com/repos/cdisesx/fu-pdo/zipball/490eddafed9667f825b701fbcb64e7b125b99a64",
+                "reference": "490eddafed9667f825b701fbcb64e7b125b99a64",
                 "shasum": ""
             },
             "require": {
@@ -38,10 +38,10 @@
             ],
             "description": "A Simple PHP-PDO SDK",
             "support": {
-                "source": "https://github.com/cdisesx/fu-pdo/tree/2.0",
+                "source": "https://github.com/cdisesx/fu-pdo/tree/2.1",
                 "issues": "https://github.com/cdisesx/fu-pdo/issues"
             },
-            "time": "2022-10-20T08:28:49+00:00"
+            "time": "2022-10-21T03:49:00+00:00"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -125,7 +125,8 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^7.0",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-json": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"
